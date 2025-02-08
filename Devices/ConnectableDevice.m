@@ -205,6 +205,7 @@
             if (!service.connected)
                 [service connect];
         }];
+        dispatch_on_main(^{ [self.delegate connectableDeviceReady:self]; });
     }
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnect) name:kConnectSDKWirelessSSIDChanged object:nil];
