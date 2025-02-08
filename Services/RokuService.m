@@ -835,6 +835,9 @@ static NSMutableArray *registeredApps = nil;
     AppInfo *appInfo = [AppInfo appInfoForId:id];
     appInfo.name = name;
     appInfo.rawData = [appDictionary copy];
+    
+    NSString *commandPath = [NSString stringWithFormat:@"http://%@:%@", self.serviceDescription.address, @(self.serviceDescription.port)];
+    appInfo.iconURL = [NSString stringWithFormat:@"%@/query/icon/%@", commandPath, id];
 
     return appInfo;
 }

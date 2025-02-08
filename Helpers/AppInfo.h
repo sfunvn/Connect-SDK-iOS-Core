@@ -36,6 +36,8 @@
 /*! User-friendly name of the app (ex. YouTube, Browser, Netflix, etc). */
 @property (nonatomic, strong) NSString *name;
 
+@property (nonatomic, strong) NSString *iconURL;
+
 /*! Raw data from the first screen device about the app. In most cases, this is an NSDictionary. */
 @property (nonatomic, strong) id rawData;
 
