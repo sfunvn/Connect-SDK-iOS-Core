@@ -161,14 +161,13 @@
     if ([DiscoveryManager sharedManager].pairingLevel == DeviceServicePairingLevelOn)
     {
         capabilities = [capabilities arrayByAddingObjectsFromArray:@[
-                kKeyControlSendKeyCode,
-                kKeyControlUp,
-                kKeyControlDown,
-                kKeyControlLeft,
-                kKeyControlRight,
-                kKeyControlHome,
-                kKeyControlBack,
-                kKeyControlOK
+            kKeyControlUp,
+            kKeyControlDown,
+            kKeyControlLeft,
+            kKeyControlRight,
+            kKeyControlHome,
+            kKeyControlBack,
+            kKeyControlEnter
         ]];
 
         capabilities = [capabilities arrayByAddingObjectsFromArray:kMouseControlCapabilities];

@@ -23,24 +23,62 @@
 
 #define kKeyControlAny @"KeyControl.Any"
 
+#define kKeyControlPower @"KeyControl.Power"
 #define kKeyControlUp @"KeyControl.Up"
 #define kKeyControlDown @"KeyControl.Down"
 #define kKeyControlLeft @"KeyControl.Left"
 #define kKeyControlRight @"KeyControl.Right"
-#define kKeyControlOK @"KeyControl.OK"
-#define kKeyControlBack @"KeyControl.Back"
+#define kKeyControlEnter @"KeyControl.Enter"
 #define kKeyControlHome @"KeyControl.Home"
-#define kKeyControlSendKeyCode @"KeyControl.Send.KeyCode"
+#define kKeyControlBack @"KeyControl.Back"
+#define kKeyControlInfo @"KeyControl.Info"
+#define kKeyControlSetting @"KeyControl.Setting"
+#define kKeyControlInputSource @"KeyControl.InputSource"
+#define kKeyControlVolumeUp @"KeyControl.VolumeUp"
+#define kKeyControlVolumeDown @"KeyControl.VolumeDown"
+#define kKeyControlMute @"KeyControl.Mute"
+#define kKeyControlHeadPhoneMode @"KeyControl.HeadPhoneMode"
+#define kKeyControlChannelUp @"KeyControl.ChannelUp"
+#define kKeyControlChannelDown @"KeyControl.ChannelDown"
+#define kKeyControlChannelList @"KeyControl.ChannelList"
+#define kKeyControlRed @"KeyControl.Red"
+#define kKeyControlGreen @"KeyControl.Green"
+#define kKeyControlYellow @"KeyControl.Yellow"
+#define kKeyControlBlue @"KeyControl.Blue"
+#define kKeyControlPlayPause @"KeyControl.PlayPause"
+#define kKeyControlForward @"KeyControl.Forward"
+#define kKeyControlRewind @"KeyControl.Rewind"
+#define kKeyControlReplay @"KeyControl.Replay"
+#define kKeyControlBackspace @"KeyControl.Backspace"
 
 #define kKeyControlCapabilities @[\
+    kKeyControlPower,\
     kKeyControlUp,\
     kKeyControlDown,\
     kKeyControlLeft,\
     kKeyControlRight,\
-    kKeyControlOK,\
-    kKeyControlBack,\
+    kKeyControlEnter,\
     kKeyControlHome,\
-    kKeyControlSendKeyCode\
+    kKeyControlBack,\
+    kKeyControlInfo,\
+    kKeyControlSetting,\
+    kKeyControlInputSource,\
+    kKeyControlVolumeUp,\
+    kKeyControlVolumeDown,\
+    kKeyControlMute,\
+    kKeyControlHeadPhoneMode,\
+    kKeyControlChannelUp,\
+    kKeyControlChannelDown,\
+    kKeyControlChannelList,\
+    kKeyControlRed,\
+    kKeyControlGreen,\
+    kKeyControlYellow,\
+    kKeyControlBlue,\
+    kKeyControlPlayPause,\
+    kKeyControlForward,\
+    kKeyControlRewind,\
+    kKeyControlReplay,\
+    kKeyControlBackspace\
 ]
 
 @protocol KeyControl <NSObject>
@@ -57,5 +95,6 @@
 - (void) homeWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure;
 
 - (void) sendKeyCode:(NSUInteger)keyCode success:(SuccessBlock)success failure:(FailureBlock)failure;
+- (void) sendKeyCodeString:(NSString*)keyCode success:(SuccessBlock)success failure:(FailureBlock)failure;
 
 @end

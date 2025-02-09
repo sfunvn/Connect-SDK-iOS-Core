@@ -82,7 +82,7 @@ static NSMutableArray *registeredApps = nil;
         kTextInputControlSendEnter,
         kTextInputControlSendDelete
     ];
-
+    
     capabilities = [capabilities arrayByAddingObjectsFromArray:kKeyControlCapabilities];
 
     [self setCapabilities:capabilities];
@@ -393,7 +393,7 @@ static NSMutableArray *registeredApps = nil;
 
 - (void)closeApp:(LaunchSession *)launchSession success:(SuccessBlock)success failure:(FailureBlock)failure
 {
-    [self.keyControl homeWithSuccess:success failure:failure];
+    [self.keyControl sendKeyCodeString:kKeyControlHome success:success failure:failure];
 }
 
 - (void)getAppListWithSuccess:(AppListSuccessBlock)success failure:(FailureBlock)failure
@@ -469,7 +469,7 @@ static NSMutableArray *registeredApps = nil;
 
 - (CapabilityPriorityLevel)mediaPlayerPriority
 {
-    return CapabilityPriorityLevelHigh;
+    return CapabilityPriorityLevelVeryHigh;
 }
 
 - (void)displayImage:(NSURL *)imageURL iconURL:(NSURL *)iconURL title:(NSString *)title description:(NSString *)description mimeType:(NSString *)mimeType success:(MediaPlayerDisplaySuccessBlock)success failure:(FailureBlock)failure
@@ -588,7 +588,7 @@ static NSMutableArray *registeredApps = nil;
     
     if (isVideo)
     {
-        applicationPath = [NSString stringWithFormat:@"15985?t=v&u=%@&k=(null)&videoName=%@&videoFormat=%@",
+        applicationPath = [NSString stringWithFormat:@"15985?t=v&u=%@&k=%20&h=%20&videoName=video%2Fmp4&videoFormat=mp4",
                            [ConnectUtil urlEncode:mediaURL.absoluteString], // content path
                            title ? [ConnectUtil urlEncode:title] : @"(null)", // video name
                            ensureString(mediaType) // video format
@@ -631,7 +631,7 @@ static NSMutableArray *registeredApps = nil;
 
 - (void)closeMedia:(LaunchSession *)launchSession success:(SuccessBlock)success failure:(FailureBlock)failure
 {
-    [self.keyControl homeWithSuccess:success failure:failure];
+    [self.keyControl sendKeyCodeString:kKeyControlHome success:success failure:failure];
 }
 
 #pragma mark - MediaControl
@@ -643,7 +643,7 @@ static NSMutableArray *registeredApps = nil;
 
 - (CapabilityPriorityLevel)mediaControlPriority
 {
-    return CapabilityPriorityLevelHigh;
+    return CapabilityPriorityLevelVeryHigh;
 }
 
 - (void)playWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure
@@ -679,7 +679,60 @@ static NSMutableArray *registeredApps = nil;
 
 - (void)getPlayStateWithSuccess:(MediaPlayStateSuccessBlock)success failure:(FailureBlock)failure
 {
-    [self sendNotSupportedFailure:failure];
+    NSURL *targetURL = [self.serviceDescription.commandURL URLByAppendingPathComponent:@"query"];
+    targetURL = [targetURL URLByAppendingPathComponent:@"media-player"];
+
+    ServiceCommand *command = [ServiceCommand commandWithDelegate:self.serviceCommandDelegate target:targetURL payload:nil];
+    command.HTTPMethod = @"GET";
+
+    command.callbackComplete = ^(NSString *responseObject) {
+        NSError *xmlError;
+        NSDictionary *mediaPlayerDict = [CTXMLReader dictionaryForXMLString:responseObject error:&xmlError];
+        
+        if (xmlError) {
+            if (failure) {
+                failure([ConnectError generateErrorWithCode:ConnectStatusCodeTvError 
+                                              andDetails:@"Error parsing media player XML response"]);
+            }
+            return;
+        }
+        
+        // Get the state attribute from player element
+        // Note: CTXMLReader prefixes XML attributes with underscore (_)
+        // <player state="play"> becomes @{@"_state": @"play"}
+        NSString *stateString = [[mediaPlayerDict objectForKey:@"player"] objectForKey:@"state"];
+        
+        MediaControlPlayState playState;
+        
+        if ([stateString isEqualToString:@"play"]) {
+            playState = MediaControlPlayStatePlaying;
+        } 
+        else if ([stateString isEqualToString:@"pause"]) {
+            playState = MediaControlPlayStatePaused;
+        }
+        else if ([stateString isEqualToString:@"buffer"]) {
+            playState = MediaControlPlayStateBuffering;
+        }
+        else if ([stateString isEqualToString:@"stop"]) {
+            playState = MediaControlPlayStateFinished;
+        }
+        else {
+            playState = MediaControlPlayStateUnknown;
+        }
+        
+        // Check for error state
+        NSString *errorString = [[mediaPlayerDict objectForKey:@"player"] objectForKey:@"_error"];
+        if (errorString && [errorString isEqualToString:@"true"]) {
+            playState = MediaControlPlayStateUnknown;
+        }
+        
+        if (success) {
+            success(playState);
+        }
+    };
+    
+    command.callbackError = failure;
+    [command send];
 }
 
 - (ServiceSubscription *)subscribePlayStateWithSuccess:(MediaPlayStateSuccessBlock)success failure:(FailureBlock)failure
@@ -694,7 +747,43 @@ static NSMutableArray *registeredApps = nil;
 
 - (void)getPositionWithSuccess:(MediaPositionSuccessBlock)success failure:(FailureBlock)failure
 {
-    [self sendNotSupportedFailure:failure];
+    NSURL *targetURL = [self.serviceDescription.commandURL URLByAppendingPathComponent:@"query"];
+    targetURL = [targetURL URLByAppendingPathComponent:@"media-player"];
+
+    ServiceCommand *command = [ServiceCommand commandWithDelegate:self.serviceCommandDelegate target:targetURL payload:nil];
+    command.HTTPMethod = @"GET";
+    
+    command.callbackComplete = ^(NSString *responseObject) {
+        NSError *xmlError;
+        NSDictionary *mediaPlayerDict = [CTXMLReader dictionaryForXMLString:responseObject error:&xmlError];
+        
+        if (xmlError) {
+            if (failure) {
+                failure([ConnectError generateErrorWithCode:ConnectStatusCodeTvError 
+                                              andDetails:@"Error parsing media player XML response"]);
+            }
+            return;
+        }
+        
+        NSDictionary *positionString = [[mediaPlayerDict objectForKey:@"player"] objectForKey:@"position"];
+        if (positionString != NULL) {
+            NSString *text = positionString[@"text"];
+            // Remove " ms" from the string and convert to number
+            NSString *numberString = [[text componentsSeparatedByString:@" "] firstObject];
+            NSTimeInterval positionValue = [numberString doubleValue] / 1000.0; // Convert from milliseconds to seconds
+            if (success) {
+                success(positionValue);
+            }
+        } else {
+            if (failure) {
+                failure([ConnectError generateErrorWithCode:ConnectStatusCodeTvError 
+                                              andDetails:@"Could not find position in media player response"]);
+            }
+        }
+    };
+    
+    command.callbackError = failure;
+    [command send];
 }
 
 - (void)getMediaMetaDataWithSuccess:(SuccessBlock)success
@@ -766,6 +855,60 @@ static NSMutableArray *registeredApps = nil;
     NSString *keyCodeString = kRokuKeyCodes[keyCode];
 
     [self sendKeyPress:keyCodeString success:success failure:failure];
+}
+
+- (void)sendKeyCodeString:(NSString *)keyCodeString success:(SuccessBlock)success failure:(FailureBlock)failure
+{
+    if (!keyCodeString) {
+        if (failure) {
+            failure([ConnectError generateErrorWithCode:ConnectStatusCodeArgumentError andDetails:@"keyCode string cannot be null"]);
+        }
+        return;
+    }
+
+    if ([keyCodeString isEqualToString:kKeyControlUp]) {
+        [self sendKeyCode:RokuKeyCodeUp success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlDown]) {
+        [self sendKeyCode:RokuKeyCodeDown success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlLeft]) {
+        [self sendKeyCode:RokuKeyCodeLeft success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlRight]) {
+        [self sendKeyCode:RokuKeyCodeRight success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlEnter]) {
+        [self sendKeyCode:RokuKeyCodeSelect success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlHome]) {
+        [self sendKeyCode:RokuKeyCodeHome success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlBack]) {
+        [self sendKeyCode:RokuKeyCodeBack success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlInfo]) {
+        [self sendKeyCode:RokuKeyCodeInfo success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlPlayPause]) {
+        [self sendKeyCode:RokuKeyCodePlay success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlForward]) {
+        [self sendKeyCode:RokuKeyCodeFastForward success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlRewind]) {
+        [self sendKeyCode:RokuKeyCodeRewind success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlBackspace]) {
+        [self sendKeyCode:RokuKeyCodeBackspace success:success failure:failure];
+    }
+    // For keys that don't have a direct mapping or are not supported
+    else {
+        if (failure) {
+            failure([ConnectError generateErrorWithCode:ConnectStatusCodeNotSupported 
+                                          andDetails:[NSString stringWithFormat:@"Key code not supported: %@", keyCodeString]]);
+        }
+    }
 }
 
 #pragma mark - Text Input Control
