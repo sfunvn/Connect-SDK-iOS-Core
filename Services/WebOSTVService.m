@@ -1601,16 +1601,16 @@
 
     }
     else if ([keyCodeString isEqualToString:kKeyControlVolumeUp]) {
-        [self sendMouseButton:WebOSTVMouseButtonVolumnUp success:success failure:failure];
+        [self volumeUpWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlVolumeDown]) {
-        [self sendMouseButton:WebOSTVMouseButtonVolumnDown success:success failure:failure];
+        [self volumeDownWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlMute]) {
-        [self sendMouseButton:WebOSTVMouseButtonMute success:success failure:failure];
+        [self setMute:YES success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlHeadPhoneMode]) {
-
+        
     }
     else if ([keyCodeString isEqualToString:kKeyControlChannelUp]) {
 
