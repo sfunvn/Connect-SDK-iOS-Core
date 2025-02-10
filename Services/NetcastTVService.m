@@ -1890,8 +1890,11 @@ NSString *lgeUDAPRequestURI[8] = {
     else if ([keyCodeString isEqualToString:kKeyControlBlue]) {
         [self sendKeyCode:NetcastTVKeyCodeBlue success:success failure:failure];
     }
-    else if ([keyCodeString isEqualToString:kKeyControlPlayPause]) {
+    else if ([keyCodeString isEqualToString:kKeyControlPlay]) {
         [self sendKeyCode:NetcastTVKeyCodePlay success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlPause]) {
+        [self sendKeyCode:NetcastTVKeyCodePause success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlForward]) {
         [self sendKeyCode:NetcastTVKeyCodeFastForward success:success failure:failure];

@@ -1555,7 +1555,7 @@
 
 - (void)sendKeyCode:(NSUInteger)keyCode success:(SuccessBlock)success failure:(FailureBlock)failure
 {
-    [self sendNotSupportedFailure:failure];
+    [self sendMouseButton:WebOSTVMouseButtonUp success:success failure:failure];
 }
 
 - (void)sendKeyCodeString:(NSString *)keyCodeString success:(SuccessBlock)success failure:(FailureBlock)failure
@@ -1571,25 +1571,25 @@
 
     }
     else if ([keyCodeString isEqualToString:kKeyControlUp]) {
-        [self sendKeyCode:WebOSTVMouseButtonUp success:success failure:failure];
+        [self sendMouseButton:WebOSTVMouseButtonUp success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlDown]) {
-        [self sendKeyCode:WebOSTVMouseButtonDown success:success failure:failure];
+        [self sendMouseButton:WebOSTVMouseButtonDown success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlLeft]) {
-        [self sendKeyCode:WebOSTVMouseButtonLeft success:success failure:failure];
+        [self sendMouseButton:WebOSTVMouseButtonLeft success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlRight]) {
-        [self sendKeyCode:WebOSTVMouseButtonRight success:success failure:failure];
+        [self sendMouseButton:WebOSTVMouseButtonRight success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlEnter]) {
-        
+        [self sendMouseButton:WebOSTVMouseButtonEnter success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlHome]) {
-        [self sendKeyCode:WebOSTVMouseButtonHome success:success failure:failure];
+        [self sendMouseButton:WebOSTVMouseButtonHome success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlBack]) {
-        [self sendKeyCode:WebOSTVMouseButtonBack success:success failure:failure];
+        [self sendMouseButton:WebOSTVMouseButtonBack success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlInfo]) {
 
@@ -1601,13 +1601,13 @@
 
     }
     else if ([keyCodeString isEqualToString:kKeyControlVolumeUp]) {
-
+        [self sendMouseButton:WebOSTVMouseButtonVolumnUp success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlVolumeDown]) {
-
+        [self sendMouseButton:WebOSTVMouseButtonVolumnDown success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlMute]) {
-
+        [self sendMouseButton:WebOSTVMouseButtonMute success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlHeadPhoneMode]) {
 
@@ -1622,28 +1622,31 @@
 
     }
     else if ([keyCodeString isEqualToString:kKeyControlRed]) {
-
+        [self sendMouseButton:WebOSTVKeyCodeRed success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlGreen]) {
-
+        [self sendMouseButton:WebOSTVKeyCodeGreen success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlYellow]) {
-
+        [self sendMouseButton:WebOSTVKeyCodeYellow success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlBlue]) {
-
+        [self sendMouseButton:WebOSTVKeyCodeBlue success:success failure:failure];
     }
-    else if ([keyCodeString isEqualToString:kKeyControlPlayPause]) {
-
+    else if ([keyCodeString isEqualToString:kKeyControlPlay]) {
+        [self sendMouseButton:WebOSTVKeyCodePlay success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlPause]) {
+        [self sendMouseButton:WebOSTVKeyCodePause success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlForward]) {
-
+        [self sendMouseButton:WebOSTVKeyCodeFastForward success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlRewind]) {
-
+        [self sendMouseButton:WebOSTVKeyCodeRewind success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlBackspace]) {
-//        [self sendKeyCode:NetCastKeyCode success:success failure:failure]; // TODO: Check
+        
     }
 }
 

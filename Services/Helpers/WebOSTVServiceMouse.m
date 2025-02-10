@@ -124,6 +124,20 @@
         case WebOSTVMouseButtonDown: keyString = @"DOWN"; break;
         case WebOSTVMouseButtonLeft: keyString = @"LEFT"; break;
         case WebOSTVMouseButtonRight: keyString = @"RIGHT"; break;
+        case WebOSTVMouseButtonEnter: keyString = @"ENTER"; break;
+        case WebOSTVMouseButtonVolumnUp: keyString = @"VOLUMEUP"; break;
+        case WebOSTVMouseButtonVolumnDown: keyString = @"VOLUMEDOWN"; break;
+        case WebOSTVMouseButtonMute: keyString = @"MUTE"; break;
+        case WebOSTVKeyCodeRed: keyString = @"403"; break;
+        case WebOSTVKeyCodeGreen: keyString = @"404"; break;
+        case WebOSTVKeyCodeYellow: keyString = @"405"; break;
+        case WebOSTVKeyCodeBlue: keyString = @"406"; break;
+        case WebOSTVKeyCodePlay: keyString = @"415"; break;
+        case WebOSTVKeyCodePause: keyString = @"19"; break;
+        case WebOSTVKeyCodeFastForward: keyString = @"417"; break;
+        case WebOSTVKeyCodeRewind: keyString = @"412"; break;
+        case WebOSTVKeyCodeStop: keyString = @"413"; break;
+            
         default:break;
     }
 

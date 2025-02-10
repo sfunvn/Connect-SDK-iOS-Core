@@ -45,7 +45,8 @@
 #define kKeyControlGreen @"KeyControl.Green"
 #define kKeyControlYellow @"KeyControl.Yellow"
 #define kKeyControlBlue @"KeyControl.Blue"
-#define kKeyControlPlayPause @"KeyControl.PlayPause"
+#define kKeyControlPlay @"KeyControl.Play"
+#define kKeyControlPause @"KeyControl.Pause"
 #define kKeyControlForward @"KeyControl.Forward"
 #define kKeyControlRewind @"KeyControl.Rewind"
 #define kKeyControlReplay @"KeyControl.Replay"
@@ -74,7 +75,8 @@
     kKeyControlGreen,\
     kKeyControlYellow,\
     kKeyControlBlue,\
-    kKeyControlPlayPause,\
+    kKeyControlPlay,\
+    kKeyControlPause,\
     kKeyControlForward,\
     kKeyControlRewind,\
     kKeyControlReplay,\

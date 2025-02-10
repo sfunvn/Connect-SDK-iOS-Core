@@ -887,7 +887,10 @@ static NSMutableArray *registeredApps = nil;
     else if ([keyCodeString isEqualToString:kKeyControlInfo]) {
         [self sendKeyCode:RokuKeyCodeInfo success:success failure:failure];
     }
-    else if ([keyCodeString isEqualToString:kKeyControlPlayPause]) {
+    else if ([keyCodeString isEqualToString:kKeyControlPlay]) {
+        [self sendKeyCode:RokuKeyCodePlay success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlPause]) { // same as play
         [self sendKeyCode:RokuKeyCodePlay success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlForward]) {
