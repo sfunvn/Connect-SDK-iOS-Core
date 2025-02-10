@@ -1558,6 +1558,95 @@
     [self sendNotSupportedFailure:failure];
 }
 
+- (void)sendKeyCodeString:(NSString *)keyCodeString success:(SuccessBlock)success failure:(FailureBlock)failure
+{
+    if (!keyCodeString) {
+        if (failure) {
+            failure([ConnectError generateErrorWithCode:ConnectStatusCodeArgumentError andDetails:@"keyCode string cannot be null"]);
+        }
+        return;
+    }
+    
+    if ([keyCodeString isEqualToString:kKeyControlPower]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlUp]) {
+        [self sendKeyCode:WebOSTVMouseButtonUp success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlDown]) {
+        [self sendKeyCode:WebOSTVMouseButtonDown success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlLeft]) {
+        [self sendKeyCode:WebOSTVMouseButtonLeft success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlRight]) {
+        [self sendKeyCode:WebOSTVMouseButtonRight success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlEnter]) {
+        
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlHome]) {
+        [self sendKeyCode:WebOSTVMouseButtonHome success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlBack]) {
+        [self sendKeyCode:WebOSTVMouseButtonBack success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlInfo]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlSetting]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlInputSource]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlVolumeUp]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlVolumeDown]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlMute]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlHeadPhoneMode]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlChannelUp]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlChannelDown]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlChannelList]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlRed]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlGreen]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlYellow]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlBlue]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlPlayPause]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlForward]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlRewind]) {
+
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlBackspace]) {
+//        [self sendKeyCode:NetCastKeyCode success:success failure:failure]; // TODO: Check
+    }
+}
+
 #pragma mark - Mouse
 
 - (id<MouseControl>)mouseControl
