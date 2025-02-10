@@ -1816,6 +1816,94 @@ NSString *lgeUDAPRequestURI[8] = {
     } failure:failure];
 }
 
+- (void)sendKeyCodeString:(NSString *)keyCodeString success:(SuccessBlock)success failure:(FailureBlock)failure
+{
+    if (!keyCodeString) {
+        if (failure) {
+            failure([ConnectError generateErrorWithCode:ConnectStatusCodeArgumentError andDetails:@"keyCode string cannot be null"]);
+        }
+        return;
+    }
+    
+    if ([keyCodeString isEqualToString:kKeyControlPower]) {
+        [self sendKeyCode:NetcastTVKeyCodePower success:success failure:failure];
+    } else if ([keyCodeString isEqualToString:kKeyControlUp]) {
+        [self sendKeyCode:NetcastTVKeyCodeUp success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlDown]) {
+        [self sendKeyCode:NetcastTVKeyCodeDown success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlLeft]) {
+        [self sendKeyCode:NetcastTVKeyCodeLeft success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlRight]) {
+        [self sendKeyCode:NetcastTVKeyCodeRight success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlEnter]) {
+        [self sendKeyCode:NetcastTVKeyCodeOK success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlHome]) {
+        [self sendKeyCode:NetcastTVKeyCodeHome success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlBack]) {
+        [self sendKeyCode:NetcastTVKeyCodeBack success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlInfo]) {
+        [self sendKeyCode:NetcastTVKeyCodeCurrentProgramInfo success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlSetting]) {
+        [self sendKeyCode:NetcastTVKeyCodeMenu success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlInputSource]) {
+        [self sendKeyCode:NetcastTVKeyCodeExternalInput success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlVolumeUp]) {
+        [self sendKeyCode:NetcastTVKeyCodeVolumeUp success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlVolumeDown]) {
+        [self sendKeyCode:NetcastTVKeyCodeVolumeDown success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlMute]) {
+        [self sendKeyCode:NetcastTVKeyCodeMute success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlHeadPhoneMode]) {
+        [self sendKeyCode:NetcastTVKeyCodeAudioDescription success:success failure:failure]; // TODO: Check it
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlChannelUp]) {
+        [self sendKeyCode:NetcastTVKeyCodeChannelUp success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlChannelDown]) {
+        [self sendKeyCode:NetcastTVKeyCodeChannelDown success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlChannelList]) {
+        [self sendKeyCode:NetcastTVKeyCodeMyApps success:success failure:failure]; // TODO: Check it
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlRed]) {
+        [self sendKeyCode:NetcastTVKeyCodeRed success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlGreen]) {
+        [self sendKeyCode:NetcastTVKeyCodeGreen success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlYellow]) {
+        [self sendKeyCode:NetcastTVKeyCodeYellow success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlBlue]) {
+        [self sendKeyCode:NetcastTVKeyCodeBlue success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlPlayPause]) {
+        [self sendKeyCode:NetcastTVKeyCodePlay success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlForward]) {
+        [self sendKeyCode:NetcastTVKeyCodeFastForward success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlRewind]) {
+        [self sendKeyCode:NetcastTVKeyCodeRewind success:success failure:failure];
+    }
+    else if ([keyCodeString isEqualToString:kKeyControlBackspace]) {
+//        [self sendKeyCode:NetCastKeyCode success:success failure:failure]; // TODO: Check
+    }
+}
+
 #pragma mark - Mouse
 
 - (id <MouseControl>)mouseControl

@@ -509,7 +509,7 @@ static NSMutableArray *registeredApps = nil;
         return;
     }
     
-    NSString *applicationPath = [NSString stringWithFormat:@"15985?t=p&u=%@&tr=crossfade",
+    NSString *applicationPath = [NSString stringWithFormat:@"15985?t=p&h=a&u=%@&tr=crossfade",
                                  [ConnectUtil urlEncode:imageURL.absoluteString] // content path
                                  ];
     
@@ -659,7 +659,7 @@ static NSMutableArray *registeredApps = nil;
 
 - (void)stopWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure
 {
-    [self sendNotSupportedFailure:failure];
+    [self sendKeyCode:RokuKeyCodeHome success:success failure:failure];
 }
 
 - (void)rewindWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure
@@ -697,9 +697,6 @@ static NSMutableArray *registeredApps = nil;
             return;
         }
         
-        // Get the state attribute from player element
-        // Note: CTXMLReader prefixes XML attributes with underscore (_)
-        // <player state="play"> becomes @{@"_state": @"play"}
         NSString *stateString = [[mediaPlayerDict objectForKey:@"player"] objectForKey:@"state"];
         
         MediaControlPlayState playState;
@@ -721,7 +718,7 @@ static NSMutableArray *registeredApps = nil;
         }
         
         // Check for error state
-        NSString *errorString = [[mediaPlayerDict objectForKey:@"player"] objectForKey:@"_error"];
+        NSString *errorString = [[mediaPlayerDict objectForKey:@"player"] objectForKey:@"error"];
         if (errorString && [errorString isEqualToString:@"true"]) {
             playState = MediaControlPlayStateUnknown;
         }
