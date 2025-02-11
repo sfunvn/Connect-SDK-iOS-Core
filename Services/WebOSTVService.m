@@ -1607,7 +1607,9 @@
         [self volumeDownWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlMute]) {
-        [self setMute:YES success:success failure:failure];
+        [self getMuteWithSuccess:^(BOOL mute) {
+            [self setMute:!mute success:success failure:failure];
+        } failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlHeadPhoneMode]) {
         
