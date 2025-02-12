@@ -45,7 +45,7 @@ typedef enum {
     LGE_APPTOAPP_DATA_REQUEST
 } LGE_REQUEST_TYPE;
 
-@interface NetcastTVService() <ServiceCommandDelegate, UIAlertViewDelegate, DeviceServiceReachabilityDelegate>
+@interface NetcastTVService() <ServiceCommandDelegate, DeviceServiceReachabilityDelegate>
 {
     NSOperationQueue *_commandQueue;
     BOOL _mouseVisible;
@@ -54,7 +54,7 @@ typedef enum {
     NSString *_keyboardString;
 
     // TODO: pull pairing timer from WebOSTVService
-    UIAlertView *_pairingAlert;
+    UIAlertController *_pairingAlert;
 
     NSMutableDictionary *_subscribed;
     NSURL *_commandURL;
@@ -335,7 +335,7 @@ NSString *lgeUDAPRequestURI[8] = {
     ServiceCommand *command = [ServiceCommand commandWithDelegate:self target:targetURL payload:payload];
     command.callbackComplete = ^(NSDictionary *responseDic)
     {
-        [self showPairingDialog];
+        [self showPairingAlert];
         [self.delegate deviceService:self pairingRequiredOfType:self.pairingType withData:self.pairingData];
     };
     command.callbackError = ^(NSError *error)
@@ -345,35 +345,45 @@ NSString *lgeUDAPRequestURI[8] = {
     [command send];
 }
 
-- (void) showPairingDialog
+- (void) showPairingAlert
 {
     NSString *title = [[NSBundle mainBundle] localizedStringForKey:@"Connect_SDK_Pair_Title" value:@"Pairing with device" table:@"ConnectSDK"];
-    NSString *message = [[NSBundle mainBundle] localizedStringForKey:@"Connect_SDK_Pair_Request_Pin" value:@"Please enter the pin code" table:@"ConnectSDK"];
+    NSString *message = [[NSBundle mainBundle] localizedStringForKey:@"Connect_SDK_Pair_Request" value:@"Please enter the pairing code" table:@"ConnectSDK"];
     NSString *ok = [[NSBundle mainBundle] localizedStringForKey:@"Connect_SDK_Pair_OK" value:@"OK" table:@"ConnectSDK"];
     NSString *cancel = [[NSBundle mainBundle] localizedStringForKey:@"Connect_SDK_Pair_Cancel" value:@"Cancel" table:@"ConnectSDK"];
 
-    _pairingAlert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:cancel otherButtonTitles:ok, nil];
-    _pairingAlert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [_pairingAlert show];
-}
-
-- (void)willPresentAlertView:(UIAlertView *)alertView
-{
-    [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-}
-
--(void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0)
+    _pairingAlert = [UIAlertController alertControllerWithTitle:title
+                                                      message:message
+                                               preferredStyle:UIAlertControllerStyleAlert];
+    
+    [_pairingAlert addTextFieldWithConfigurationHandler:nil];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancel
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:^(UIAlertAction *action) {
         [self dismissPairingWithSuccess:nil failure:nil];
-    else if (buttonIndex == 1)
-    {
-        NSString *pairingCode = [_pairingAlert textFieldAtIndex:0].text;
+    }];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:ok
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *action) {
+        NSString *pairingCode = _pairingAlert.textFields.firstObject.text;
         [self pairWithData:pairingCode];
-    }
+    }];
+    
+    [_pairingAlert addAction:cancelAction];
+    [_pairingAlert addAction:okAction];
+    
+    dispatch_on_main(^{
+        UIViewController *topVC = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        while (topVC.presentedViewController) {
+            topVC = topVC.presentedViewController;
+        }
+        [topVC presentViewController:_pairingAlert animated:YES completion:nil];
+    });
 }
 
-- (void) dismissPairingWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure
+- (void)dismissPairingWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure
 {
     NSString *targetPath = [self.commandURL.absoluteString stringByAppendingPathComponent:lgeUDAPRequestURI[LGE_PAIRING_REQUEST]];
     NSURL *targetURL = [NSURL URLWithString:targetPath];

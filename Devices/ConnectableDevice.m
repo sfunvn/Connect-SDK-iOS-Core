@@ -456,7 +456,14 @@
         else
         {
             if (pairingType == DeviceServicePairingTypeAirPlayMirroring)
-                [(UIAlertView *)pairingData show];
+            {
+                UIAlertController *alert = (UIAlertController *)pairingData;
+                UIViewController *topVC = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+                while (topVC.presentedViewController) {
+                    topVC = topVC.presentedViewController;
+                }
+                [topVC presentViewController:alert animated:YES completion:nil];
+            }
         }
     }
 }
