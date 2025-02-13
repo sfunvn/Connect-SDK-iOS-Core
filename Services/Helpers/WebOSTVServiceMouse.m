@@ -128,6 +128,9 @@
         case WebOSTVMouseButtonVolumnUp: keyString = @"VOLUMEUP"; break;
         case WebOSTVMouseButtonVolumnDown: keyString = @"VOLUMEDOWN"; break;
         case WebOSTVMouseButtonMute: keyString = @"MUTE"; break;
+        case WebOSTVMouseButtonInfo: keyString = @"INFO"; break;
+        case WebOSTVMouseButtonMenu: keyString = @"MENU"; break;
+            
         case WebOSTVKeyCodeRed: keyString = @"403"; break;
         case WebOSTVKeyCodeGreen: keyString = @"404"; break;
         case WebOSTVKeyCodeYellow: keyString = @"405"; break;

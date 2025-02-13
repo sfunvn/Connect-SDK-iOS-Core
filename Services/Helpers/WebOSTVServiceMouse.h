@@ -32,6 +32,8 @@ typedef enum {
     WebOSTVMouseButtonVolumnUp = 1007,
     WebOSTVMouseButtonVolumnDown = 1008,
     WebOSTVMouseButtonMute = 1009,
+    WebOSTVMouseButtonInfo = 1010,
+    WebOSTVMouseButtonMenu = 1011,
 
     WebOSTVKeyCodeRed = 403,
     WebOSTVKeyCodeGreen = 404,

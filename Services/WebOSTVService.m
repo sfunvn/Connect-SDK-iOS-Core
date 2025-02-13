@@ -911,7 +911,7 @@
 
 - (CapabilityPriorityLevel)mediaPlayerPriority
 {
-    return CapabilityPriorityLevelHigh;
+    return CapabilityPriorityLevelVeryHigh;
 }
 
 - (void)displayImage:(NSURL *)imageURL iconURL:(NSURL *)iconURL title:(NSString *)title description:(NSString *)description mimeType:(NSString *)mimeType success:(MediaPlayerDisplaySuccessBlock)success failure:(FailureBlock)failure
@@ -1100,6 +1100,17 @@
 - (CapabilityPriorityLevel)mediaControlPriority
 {
     return CapabilityPriorityLevelHigh;
+}
+
+- (void)switchInputWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure
+{
+    // tv/switchInput
+    NSURL *URL = [NSURL URLWithString:@"ssap://tv/switchInput"];
+
+    ServiceCommand *command = [ServiceAsyncCommand commandWithDelegate:self.socket target:URL payload:nil];
+    command.callbackComplete = success;
+    command.callbackError = failure;
+    [command send];
 }
 
 - (void)playWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure
@@ -1625,7 +1636,7 @@
     }
     
     if ([keyCodeString isEqualToString:kKeyControlPower]) {
-
+        [self powerOffWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlUp]) {
         [self sendMouseButton:WebOSTVMouseButtonUp success:success failure:failure];
@@ -1649,13 +1660,13 @@
         [self sendMouseButton:WebOSTVMouseButtonBack success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlInfo]) {
-
+        [self sendMouseButton:WebOSTVMouseButtonInfo success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlSetting]) {
-
+        [self sendMouseButton:WebOSTVMouseButtonMenu success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlInputSource]) {
-
+        [self switchInputWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlVolumeUp]) {
         [self volumeUpWithSuccess:success failure:failure];
@@ -1672,13 +1683,13 @@
         
     }
     else if ([keyCodeString isEqualToString:kKeyControlChannelUp]) {
-
+        [self channelUpWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlChannelDown]) {
-
+        [self channelDownWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlChannelList]) {
-
+        
     }
     else if ([keyCodeString isEqualToString:kKeyControlRed]) {
         [self sendMouseButton:WebOSTVKeyCodeRed success:success failure:failure];
@@ -1693,16 +1704,16 @@
         [self sendMouseButton:WebOSTVKeyCodeBlue success:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlPlay]) {
-        [self sendMouseButton:WebOSTVKeyCodePlay success:success failure:failure];
+        [self playWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlPause]) {
-        [self sendMouseButton:WebOSTVKeyCodePause success:success failure:failure];
+        [self pauseWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlForward]) {
-        [self sendMouseButton:WebOSTVKeyCodeFastForward success:success failure:failure];
+        [self fastForwardWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlRewind]) {
-        [self sendMouseButton:WebOSTVKeyCodeRewind success:success failure:failure];
+        [self rewindWithSuccess:success failure:failure];
     }
     else if ([keyCodeString isEqualToString:kKeyControlBackspace]) {
         
@@ -2241,7 +2252,7 @@
 
 - (CapabilityPriorityLevel) textInputControlPriority
 {
-    return CapabilityPriorityLevelHigh;
+    return CapabilityPriorityLevelVeryHigh;
 }
 
 - (void) sendText:(NSString *)input success:(SuccessBlock)success failure:(FailureBlock)failure
