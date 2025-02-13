@@ -923,22 +923,72 @@ static NSMutableArray *registeredApps = nil;
     return CapabilityPriorityLevelNormal;
 }
 
-- (void) sendText:(NSString *)input success:(SuccessBlock)success failure:(FailureBlock)failure
+- (NSString *)normalizeString:(NSString *)input {
+    NSString *normalized = [input decomposedStringWithCanonicalMapping];
+    NSMutableString *result = [NSMutableString string];
+    
+    [normalized enumerateSubstringsInRange:NSMakeRange(0, normalized.length)
+                                 options:NSStringEnumerationByComposedCharacterSequences
+                              usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+        // Get the first character (base character without diacritics)
+        unichar firstChar = [substring characterAtIndex:0];
+        [result appendString:[NSString stringWithCharacters:&firstChar length:1]];
+    }];
+    
+    return result;
+}
+
+- (void)sendText:(NSString *)input success:(SuccessBlock)success failure:(FailureBlock)failure
 {
-    // TODO: optimize this with queueing similiar to webOS and Netcast services
+    // Normalize the input text first to remove diacritical marks
+    NSString *normalizedInput = [self normalizeString:input];
+    
     NSMutableArray *stringToSend = [NSMutableArray new];
 
-    [input enumerateSubstringsInRange:NSMakeRange(0, input.length) options:(NSStringEnumerationByComposedCharacterSequences) usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop)
+    [normalizedInput enumerateSubstringsInRange:NSMakeRange(0, normalizedInput.length) 
+                                      options:(NSStringEnumerationByComposedCharacterSequences) 
+                                   usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop)
     {
         [stringToSend addObject:substring];
     }];
 
+    // Create a dispatch queue for sequential execution
+    dispatch_queue_t queue = dispatch_queue_create("com.connectsdk.roku.textinput", DISPATCH_QUEUE_SERIAL);
+    
+    __block NSInteger completedCount = 0;
+    NSInteger totalCount = stringToSend.count;
+    
     [stringToSend enumerateObjectsUsingBlock:^(NSString *charToSend, NSUInteger idx, BOOL *stop)
     {
-
-        NSString *codeToSend = [NSString stringWithFormat:@"%@%@", kRokuKeyCodes[RokuKeyCodeLiteral], [ConnectUtil urlEncode:charToSend]];
-
-        [self sendKeyPress:codeToSend success:success failure:failure];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * idx * NSEC_PER_SEC)), queue, ^{
+            NSString *codeToSend;
+            
+            // Handle special characters
+            if ([charToSend isEqualToString:@"\b"] || [charToSend isEqualToString:@"\x7F"]) {
+                codeToSend = kRokuKeyCodes[RokuKeyCodeBackspace];
+            } 
+            else if ([charToSend isEqualToString:@"\r"] || [charToSend isEqualToString:@"\n"]) {
+                codeToSend = kRokuKeyCodes[RokuKeyCodeEnter];
+            }
+            else if ([charToSend isEqualToString:@" "]) {
+                codeToSend = [NSString stringWithFormat:@"%@%@", kRokuKeyCodes[RokuKeyCodeLiteral], @" "];
+            }
+            else if ([charToSend isEqualToString:@"\e"]) { // escape key
+                codeToSend = kRokuKeyCodes[RokuKeyCodeBackspace];
+            }
+            else {
+                codeToSend = [NSString stringWithFormat:@"%@%@", kRokuKeyCodes[RokuKeyCodeLiteral], [ConnectUtil urlEncode:charToSend]];
+            }
+            
+            [self sendKeyPress:codeToSend success:^(id _Nullable result) {
+                completedCount++;
+                if (completedCount == totalCount && success) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        success(result);
+                    });
+                }
+            } failure:failure];
+        });
     }];
 }
 
