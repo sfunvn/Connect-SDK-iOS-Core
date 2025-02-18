@@ -2257,10 +2257,32 @@
 
 - (void) sendText:(NSString *)input success:(SuccessBlock)success failure:(FailureBlock)failure
 {
-    [_keyboardQueue addObject:input];
+    if ([input isEqualToString:@"0"]) {
+        [self sendMouseButton:WebOSTVMouseNum0 success:success failure:failure];
+    } else if ([input isEqualToString:@"1"]) {
+        [self sendMouseButton:WebOSTVMouseNum1 success:success failure:failure];
+    } else if ([input isEqualToString:@"2"]) {
+        [self sendMouseButton:WebOSTVMouseNum2 success:success failure:failure];
+    } else if ([input isEqualToString:@"3"]) {
+        [self sendMouseButton:WebOSTVMouseNum3 success:success failure:failure];
+    } else if ([input isEqualToString:@"4"]) {
+        [self sendMouseButton:WebOSTVMouseNum4 success:success failure:failure];
+    } else if ([input isEqualToString:@"5"]) {
+        [self sendMouseButton:WebOSTVMouseNum5 success:success failure:failure];
+    } else if ([input isEqualToString:@"6"]) {
+        [self sendMouseButton:WebOSTVMouseNum6 success:success failure:failure];
+    } else if ([input isEqualToString:@"7"]) {
+        [self sendMouseButton:WebOSTVMouseNum7 success:success failure:failure];
+    } else if ([input isEqualToString:@"8"]) {
+        [self sendMouseButton:WebOSTVMouseNum8 success:success failure:failure];
+    } else if ([input isEqualToString:@"9"]) {
+        [self sendMouseButton:WebOSTVMouseNum9 success:success failure:failure];
+    } else {
+        [_keyboardQueue addObject:input];
 
-    if (!_keyboardQueueProcessing)
-        [self sendKeys];
+        if (!_keyboardQueueProcessing)
+            [self sendKeys];
+    }
 }
 
 - (void)sendEnterWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure

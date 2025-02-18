@@ -131,15 +131,26 @@
         case WebOSTVMouseButtonInfo: keyString = @"INFO"; break;
         case WebOSTVMouseButtonMenu: keyString = @"MENU"; break;
             
-        case WebOSTVKeyCodeRed: keyString = @"403"; break;
-        case WebOSTVKeyCodeGreen: keyString = @"404"; break;
-        case WebOSTVKeyCodeYellow: keyString = @"405"; break;
-        case WebOSTVKeyCodeBlue: keyString = @"406"; break;
-        case WebOSTVKeyCodePlay: keyString = @"415"; break;
-        case WebOSTVKeyCodePause: keyString = @"19"; break;
-        case WebOSTVKeyCodeFastForward: keyString = @"417"; break;
-        case WebOSTVKeyCodeRewind: keyString = @"412"; break;
-        case WebOSTVKeyCodeStop: keyString = @"413"; break;
+        case WebOSTVMouseNum0: keyString = @"0"; break;
+        case WebOSTVMouseNum1: keyString = @"1"; break;
+        case WebOSTVMouseNum2: keyString = @"2"; break;
+        case WebOSTVMouseNum3: keyString = @"3"; break;
+        case WebOSTVMouseNum4: keyString = @"4"; break;
+        case WebOSTVMouseNum5: keyString = @"5"; break;
+        case WebOSTVMouseNum6: keyString = @"6"; break;
+        case WebOSTVMouseNum7: keyString = @"7"; break;
+        case WebOSTVMouseNum8: keyString = @"8"; break;
+        case WebOSTVMouseNum9: keyString = @"9"; break;
+            
+        case WebOSTVKeyCodeRed: keyString = @"RED"; break;
+        case WebOSTVKeyCodeGreen: keyString = @"GREEN"; break;
+        case WebOSTVKeyCodeYellow: keyString = @"YELLOW"; break;
+        case WebOSTVKeyCodeBlue: keyString = @"BLUE"; break;
+        case WebOSTVKeyCodePlay: keyString = @"PLAY"; break;
+        case WebOSTVKeyCodePause: keyString = @"PAUSE"; break;
+        case WebOSTVKeyCodeFastForward: keyString = @"FASTFORWARD"; break;
+        case WebOSTVKeyCodeRewind: keyString = @"REWIND"; break;
+        case WebOSTVKeyCodeStop: keyString = @"STOP"; break;
             
         default:break;
     }

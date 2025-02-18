@@ -833,7 +833,7 @@ static const NSInteger kValueNotFound = -1;
 
 - (CapabilityPriorityLevel) mediaPlayerPriority
 {
-    return CapabilityPriorityLevelNormal;
+    return CapabilityPriorityLevelHigh;
 }
 
 - (void)displayImage:(NSURL *)imageURL iconURL:(NSURL *)iconURL title:(NSString *)title description:(NSString *)description mimeType:(NSString *)mimeType success:(MediaPlayerDisplaySuccessBlock)success failure:(FailureBlock)failure
